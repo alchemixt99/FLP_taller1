@@ -26,9 +26,14 @@
 ;;(list-tails '(1 a (e 4) 5 v))
 
 
-;;************** Punto 1 **************
+;;************** Punto 2 **************
+;;<lista-de-elementos> := ()
+;;list-predicados: "lo que busca" lista -> boolean
 
-;;************** Fin Punto 1 **********
+(define exists? 
+  ())
+
+;;************** Fin Punto 2 **********
 ;;************** Punto 3 **************
 ;;<lista-de-elementos> := ()
 ;;list-facts: n -> lista
