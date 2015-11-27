@@ -1,7 +1,8 @@
 #lang eopl
 ;;Nombre: Jhon Erik Avila Ortiz
-;;Codigo: 201210209
-;;
+;;Código: 201210209-3743
+;;Nombre: Sebastian Guacheta Salazar
+;;Código: 200938596-3743
 
 
 ;;************** Punto 1 **************
@@ -24,6 +25,10 @@
 ;;(list-tails '(1 2 3 4 5 ))
 ;;(list-tails '(1 a (e 4) 5 v))
 
+
+;;************** Punto 1 **************
+
+;;************** Fin Punto 1 **********
 ;;************** Punto 3 **************
 ;;<lista-de-elementos> := ()
 ;;list-facts: n -> lista
