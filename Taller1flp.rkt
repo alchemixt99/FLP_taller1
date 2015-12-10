@@ -108,4 +108,64 @@
 ;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
 ;;       comenzando en 1! hasta n!
 
+;;función auxiliar que nos permita construir las listas de factoriales
+(define aux-lista_facts
+  (lambda (act ant num)
+    
+    (if (eqv? act (+ num 1))
+        '()
+        (cons (* act ant) (aux-lista_facts (+ act 1)(* act ant) num))
+        )
+      )
+    ) 
 
+
+;;función principal
+(define list-facts
+  (lambda (num)
+      (if (eqv? 0 num)
+          '(1)
+          (aux-lista_facts 1 1 num)))) 
+
+;;Pruebas
+;;(list-facts 5)
+;;(list-facts 0)
+;;(list-facts 1)
+
+;;Pruebas
+;;(exist? number? '(a b c 3 e))
+;;(exist? boolean? '(a b c 3 e))
+
+;;************** Punto 4 ****************
+;;<valor> := <entero>
+;;        := (lista-enteros)
+;;
+;;list-facts : n -> lista-enteros
+;;
+;;   Propósito:
+;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
+;;       comenzando en 1! hasta n!
+
+;; PARA EL FIN DE SEMANA
+
+
+;;************** Punto 5 ****************
+;;<valor> := <entero>
+;;        := (lista-enteros)
+;;
+;;list-facts : n -> lista-enteros
+;;
+;;   Propósito:
+;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
+;;       comenzando en 1! hasta n!
+
+(define inversions
+  (lambda (ls)
+    (let ((y (parse-exp ls)))
+      (if (null? (unparse-exp y))
+          0
+          (cons (unparse-exp y)(list-tails(cdr (unparse-exp y))))
+          )
+      )
+    )
+  )
