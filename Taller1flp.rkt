@@ -1,69 +1,111 @@
 #lang eopl
-;;Nombre: Jhon Erik Avila Ortiz
-;;Codigo: 201210209
-;;
-
+;;Jhon Erik Avila Ortiz | 201210209
+;;Sebastian Salazar     | 200938596
+;;Taller 1
 
 ;;************** Punto 1 **************
 ;;<lista-de-elementos> := ()
-;;list-tails : lista -> lista2
+;;list-tails : lista -> lista
 ;;
 ;;   Propósito:
 ;;       Este procedimiento recibe una lista y con esta construye una nueva usando 
 ;;       las sublistas de elementos consecutivos en la lista inicial.
 ;;
-(define-datatype list list?
+(define-datatype lista lista?
   (empty-list)
-  (non-empty-list (first number?)
-                  (rest list?))
-)
-(define-datatype s-exp s-exp?
-  (symbol-s-exp (sym symbol?))
-  (number-s-exp (num number?))
-  (s-list-s-exp (slst list?))
-)
+  (non-empty-list (first exp?)
+                   (rest lista?))
+  )
+
+(define-datatype exp exp?
+  (symbol-exp (sym symbol?))
+  (number-exp (num number?))
+  (lista-exp (lst lista?))
+  (boolean-exp (bool boolean?)))
 
 
+(define parse-exp
+  (lambda (dato)
+    (cond
+      ((symbol? dato) (symbol-exp dato))
+      ((number? dato) (number-exp dato))
+      ((lista? dato) (lista-exp dato))
+      ((boolean? dato) (boolean-exp dato))
+      ((null? dato)(empty-list))
+      ((pair? dato)
+             (non-empty-list (parse-exp(if(null?(car dato))
+                                           (empty-list)
+                                           (if(pair?(car dato))
+                                                  (parse-exp(car dato))
+                                                  (car dato))))
+             (parse-exp (cdr dato)))
+             )
+      ("Error en la sintaxis"))))
+
+(define unparse-exp
+  (lambda (expr)
+    (cases lista expr
+      (empty-list () '())
+      (non-empty-list (first rest)
+             (cons
+              (cases exp first
+                (symbol-exp  (symbol) symbol)
+                (number-exp (number) number)
+                (boolean-exp (boolean) boolean)
+                (lista-exp (lista) (unparse-exp lista) )
+                )
+              (unparse-exp rest))))))
+      
 (define list-tails 
   (lambda (ls)
-  (cases list ls
-    (empty-list () #t)
-    (non-empty-list (ls lx) #f) 
+    (let ((y (parse-exp ls)))
+      (if (null? (unparse-exp y))
+          '()
+          (cons (unparse-exp y)(list-tails(cdr (unparse-exp y))))
+          )
+      )
+    )
   )
-   )
-)
+
+ 
 ;;Pruebas
-;;(list-tails '(1 2 3 4 5 ))
+;;(list-tails '(1 2 3 4 5))
 ;;(list-tails '(1 a (e 4) 5 v))
 
-;;************** Punto 3 **************
-;;<lista-de-elementos> := ()
-;;list-facts: n -> lista
+;;************** Punto 2 **************
+;;<expression> := boolean
+;; exist : pred lista -> boolean
 ;;
 ;;   Propósito:
-;;       Este procedimiento recibe como par parámetro un entero n y retorna una lista incremental de factoriales,
-;;       comenzando en 1! hasta n!
-;;
-(define aux-lf
-  (lambda (act ant n)
-    (if (eqv? act (+ n 1))
-        '()
-        (cons (* act ant) (aux-lf (+ act 1)(* act ant) n))))) 
+;;       Este procedimiento recibe como parametros un predicado (number? symbol? bool? list?) y retorna
+;;       #t si al menos un elemento de la lista satisface el predicado
 
-(define list-facts
-  (lambda (n)
-    (if (= 0 n)
-        0
-        (aux-lf 1 1 n)))) 
+(define exist?
+  (lambda (pred lst)
+    (let ((ls (parse-exp lst)))
+    (if (null? (unparse-exp ls))
+        #f
+        (if (pred (car (unparse-exp ls)))
+            #t
+            (exist? pred (cdr (unparse-exp ls)))
+        )
+    )
+      )
+    )
+  )
 
 ;;Pruebas
-;;(list-facts 5)
+;;(exist? number? '(a b c 3 e))
+;;(exist? boolean? '(a b c 3 e))
 
-;;************** Punto 5 **************
-;;<lista-de-elementos> := ()
-;;list-facts: n -> lista
+;;************** Punto 3 ****************
+;;<valor> := <entero>
+;;        := (lista-enteros)
+;;
+;;list-facts : n -> lista-enteros
 ;;
 ;;   Propósito:
-;;       Este procedimiento  determina el número de inversiones de lista. Sea A = (a1, a2 . . . an) una
-;;       lista de n números diferentes, si i < j y ai > aj entonces la pareja (i j) es una inversión de A.
-;;
+;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
+;;       comenzando en 1! hasta n!
+
+

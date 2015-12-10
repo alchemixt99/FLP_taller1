@@ -3,24 +3,28 @@
 ;;Codigo: 201210209
 ;;
 
-
-
-;;************** Punto 2 **************
+;;************** Punto 1 **************
 ;;<lista-de-elementos> := ()
-;;list-tails : lista -> lista2
+;;list-tails : lista -> lista
 ;;
 ;;   Propósito:
 ;;       Este procedimiento recibe una lista y con esta construye una nueva usando 
 ;;       las sublistas de elementos consecutivos en la lista inicial.
 ;;
-(define list-tails
-  (lambda (ls)
-    (if (null? ls)
-        '()
-        (cons ls (list-tails (cdr ls)))
-        )
-    )
-  )
+(define-datatype lista lista?
+  (empty-list)
+  (non-empty-list (first s-exp?)
+                  (rest lista?))
+)
+
+(define-datatype s-exp s-exp?
+  (symbol-s-exp (sym symbol?))
+  (number-s-exp (num number?))
+  (s-list-s-exp (slst list?))
+)
+
 ;;Pruebas
 ;;(list-tails '(1 2 3 4 5 ))
 ;;(list-tails '(1 a (e 4) 5 v))
+
+;;revisar el interprete para que convierta de sintaxis normal a arbol de sintaxois abstracta
