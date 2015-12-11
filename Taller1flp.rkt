@@ -150,14 +150,13 @@
 
 
 ;;************** Punto 5 ****************
-;;<valor> := <entero>
-;;        := (lista-enteros)
+;;<valor> := <lista>
+;;        := entero
 ;;
-;;list-facts : n -> lista-enteros
+;;inversions : lista-enteros -> n
 ;;
 ;;   Propósito:
-;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
-;;       comenzando en 1! hasta n!
+;;       Este procedimiento  determina el numero de inversiones de lista.
 
 (define fn_aux_inv
   (lambda (num lst)
@@ -188,3 +187,31 @@
 ;; (inversions '(2 3 8 6 1))
 ;; (inversions '(1 2 3 4))
 ;; (inversions '(3 2 1))
+
+
+;;************** Punto 6 ****************
+;;<valor> := <lista>
+;;        := <lista>
+;;
+;;up : lista-var-exp -> lista-var-exp
+;;
+;;   Propósito:
+;;       Este procedimiento remueve un par de parentesis de cada elemento del nivel más alto de lista
+
+(define up
+  (lambda (lst)
+    (let ((list-val (parse-exp lst)))
+    (if (null? (unparse-exp list-val))
+        '()
+        (if (pair? (car (unparse-exp list-val)))
+            (append (car (unparse-exp list-val)) (up (cdr (unparse-exp list-val))) )
+            (cons (car (unparse-exp list-val)) (up (cdr (unparse-exp list-val))) )
+        )
+    )
+      )
+))
+
+;;Pruebas
+;;(up '((1 2) (3 4)))
+;;(up '((x (y)) z))
+
