@@ -159,13 +159,32 @@
 ;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
 ;;       comenzando en 1! hasta n!
 
+(define fn_aux_inv
+  (lambda (num lst)
+    (let ((l-v (parse-exp lst)))
+    (if(null? (unparse-exp l-v))
+       0
+       (if (> num (car (unparse-exp l-v)))
+           (+ 1 (fn_aux_inv num (cdr (unparse-exp l-v))))
+           (+ 0 (fn_aux_inv num (cdr (unparse-exp l-v))))
+       )
+    )
+      )
+  )
+)
+
 (define inversions
   (lambda (ls)
-    (let ((y (parse-exp ls)))
-      (if (null? (unparse-exp y))
+    (let ((list-values (parse-exp ls)))
+      (if (null? (unparse-exp list-values))
           0
-          (cons (unparse-exp y)(list-tails(cdr (unparse-exp y))))
-          )
+          (+ (fn_aux_inv (car (unparse-exp list-values)) (cdr (unparse-exp list-values))) (inversions (cdr (unparse-exp list-values))))
       )
     )
   )
+  )
+
+;; Pruebas 
+;; (inversions '(2 3 8 6 1))
+;; (inversions '(1 2 3 4))
+;; (inversions '(3 2 1))
