@@ -215,3 +215,32 @@
 ;;(up '((1 2) (3 4)))
 ;;(up '((x (y)) z))
 
+;;************** Punto 7 ****************
+;;<valor> := <lista> <lista>
+;;        := <lista>
+;;
+;;merge : lista-var-exp  lista-var-exp -> lista-var-exp
+;;
+;;   Propósito:
+;;       Este procedimiento donde lista1 y lista2 son listas de enteros ordenadas ascendentemente. 
+;;       El procedimiento merge retorna una lista ordenada de todos los elementos en lista1 lista2
+
+(define merge 
+(lambda (l1 l2)
+  (let ((lst1 (parse-exp l1)) (lst2 (parse-exp l2)))
+  (if (null? (unparse-exp lst1))
+      (unparse-exp lst2)
+      (if (null? (unparse-exp lst2))
+          (unparse-exp lst1)
+          (if (<= (car (unparse-exp lst1)) (car (unparse-exp lst2)))
+              (cons (car (unparse-exp lst1)) (merge (cdr (unparse-exp lst1)) (unparse-exp lst2)))
+              (cons (car (unparse-exp lst2)) (merge (unparse-exp lst1) (cdr (unparse-exp lst2))))           
+          )
+      )
+  )
+    )
+ )
+)
+;;Pruebas
+;;(merge '(1 4) '(1 2 8))
+;;(merge '(35 62 81 90 91) '(3 83 85 90))
