@@ -146,7 +146,7 @@
 ;;       Este procedimiento  que recibe como par ́ametro un entero n y retorna una lista incremental de factoriales,
 ;;       comenzando en 1! hasta n!
 
-;; PARA EL FIN DE SEMANA
+;; no se pudo hacer :(
 
 
 ;;************** Punto 5 ****************
@@ -244,3 +244,223 @@
 ;;Pruebas
 ;;(merge '(1 4) '(1 2 8))
 ;;(merge '(35 62 81 90 91) '(3 83 85 90))
+
+
+;;************** Punto 8 ****************
+;; Propósito:
+;;   retorna una lista donde la posicion n-sima corresponde al resultado
+;;   de aplicar la funcion f sobre los elementos en la posicion n-sima en lista1 y lista2. Puede asumir que
+;;   f es una funcion que recibe dos argumentos y que ambas listan tienen igual tamaño
+
+(define zip
+  (lambda (f l1 l2)
+    (let ((x (parse-exp l1)) (y (parse-exp l2)))
+    (if (null? (unparse-exp x)) '()
+        (cons (f (car (unparse-exp x)) (car (unparse-exp y)))(zip f (cdr (unparse-exp x))(cdr (unparse-exp y))))
+        ))))
+
+;;Pruebas
+;;(zip + '(1 4) '(6 2))
+;;(zip + '(11 5 6) '(10 9 8))
+
+;;************** Punto 10 ****************
+;; Propósito:
+;;recibe una lista lista, una funcion f y un valor inicial acum. La
+;;funcion f es una funcion que recibe dos parametros. Este procedimiento aplicara la funcion f a cada
+;; elemento de la lista y a un valor acumulado inicialmente correspondiente al valor inicial acum.
+
+(define foldl
+  (lambda (ls f acum)
+    (let((x (parse-exp ls)))
+    (if (null? (unparse-exp x)) acum
+        (foldl (cdr (unparse-exp x)) f (f acum (car (unparse-exp x))))
+    )
+  )
+))
+
+;;Prueba
+;; (foldl '(12 4 21 11 8) + 0)
+;; (foldl '(19 12 34 8 14 45) max 0)
+
+;;************** Punto 11 ****************
+;; Propósito:
+;;recibe dos numeros a y b, una función binaria f, un valor inicial acum y una funcion unitaria filter
+;;Este procedimiento aplicara la función f a cada valor entre a y b y a un valor acumulado que inicialmente 
+;;corresponde al valor inicial de acum.
+
+(define filter-acum
+  (lambda (a b f acum filter)
+    (if (<= a b) 
+    (if (filter a)
+         (filter-acum (+ a 1) b f (f acum a) filter)
+         (filter-acum (+ a 1) b f acum filter)
+    )
+    acum)))
+        
+;;Prueba
+;;(filter-acum 1 10 + 0 odd?)
+;;(filter-acum 1 10 + 0 even?)
+
+;;************** Punto 12 ****************
+;; Propósito:
+;;     recibe una lista con valores aleatorios y los ordena segun sea su operador < >
+#|(define sort-aux
+  (lambda ()
+    
+(define sort
+  (lambda (ls f)
+    (if (null? (cadr ls)) ls
+        (
+|#
+
+;; Pruebas 
+;;(sort '(8 2 5 2 3) <)
+;;(sort '(8 2 5 2 3) >)
+
+;;************** Punto 13 ****************
+;; Propósito:
+#|que toma un entero num y un arbol binario de busqueda que contiene el entero
+num y retorna una lista de lefts y rights indicando como encontrar el nodo que contiene el entero num
+en el arbol. Si num es encontrado en la raız, el procedimiento retorna una lista vacia.|#
+
+
+(define path
+  (lambda (num arbol)
+    (if (null? arbol)
+        (reportar-no-encontrado num)
+        (if (eqv? num (car arbol))
+            '()
+            (let ( (nodo-izq (cadr arbol))
+                   (nodo-der (caddr arbol)) )
+              
+              (if (< num (car arbol))
+                  (cons 'left (path num nodo-izq))
+                  (cons 'right (path num nodo-der))
+                  )
+              )
+            )
+        )
+    )
+  )
+(define reportar-no-encontrado
+  (lambda (num)
+    (eopl:error "numero no encontrado")))
+;; Pruebas
+#|
+(path 17 '(14 (7 () (12 () ()))
+(26 (20 (17 () ())
+())
+(31 () ()))))
+|#
+
+
+;;************** Punto 15 ****************
+;; Procedimiento:
+#|que recibe dos arboles n-arios y retorna el subarbol
+comun (estructuralmente). El subarbol comun se compone de las ramas 
+que existen en ambos arboles. En este ejercicio el dato existente 
+en cada nodo es irrelevante por lo que puede asumir que siempre sera 0.|#
+
+(define common-subtree
+  (lambda (arbol1 arbol2)
+    (if (or (null? arbol1) (null? arbol2) )
+          '()
+          (let ( (nodo-izq1 (cadr arbol1))
+                 (nodo-izq2 (cadr arbol2))
+                 (nodo-der1 (caddr arbol1))
+                 (nodo-der2 (caddr arbol2)) )
+            
+            (list (car arbol2)(common-subtree nodo-izq1 nodo-izq2)
+                              (common-subtree nodo-der1 nodo-der2))
+            )
+          )
+    )
+  )
+;; Pruebas
+#|(common-subtree '(0 (0 () (0 () ()) )
+                    (0 (0 () ()) (0 () ()) ))
+                '(0 (0 (0 () ()) () )
+                    (0 () (0 () ()) )))|#
+
+;;************** Punto 16 ****************
+;; Propósito:
+;;     procedimiento que retorna la fila N del triangulo de Pascal.
+
+(define suma-lst-hasta-n
+  (lambda (lst-n n)
+    (if (= 1 n)
+        lst-n
+        (let ( (lst1 (car (0-inserta-0 lst-n)))
+               (lst2 (cadr (0-inserta-0 lst-n))) )
+          
+          (suma-lst-hasta-n (suma lst1 lst2) (- n 1))
+))))
+
+(define suma
+  (lambda (lst1 lst2)
+    (if (null? lst1)
+        '()
+        (cons (+ (car lst1) (car lst2)) (suma (cdr lst1) (cdr lst2)))
+)))
+
+(define 0-inserta-0
+  (lambda (lst)
+    (list (cons 0 lst) (append lst '(0)))
+    ))
+
+(define pascal
+  (lambda (n)
+    (let ((lst-n '(1)))
+      (if (= n 1)
+          lst-n
+          (suma-lst-hasta-n lst-n n)
+))))
+
+;; Pruebas
+;;(pascal 1)
+;;(pascal 5)
+
+
+(define max-lista
+  (lambda (y)
+    (let ((ls(parse-exp y)))
+  (if (null? (unparse-exp ls)) ; edge case: empty list
+      '()             ; return a special value signaling error   
+      (let x ((ls (cdr (unparse-exp ls)))   ; rest of the list
+                 (max (car (unparse-exp ls))))  ; assumed maximum
+        (cond
+          ((null? (unparse-exp ls)) max)    ; if the list is empty, return max
+          ((> (car (unparse-exp ls)) max)(x (cdr (unparse-exp ls)) (car (unparse-exp ls)))) ; found new max
+          (else (x (cdr (unparse-exp ls)) max))))))))
+
+;;(max-lista '())
+
+(define maximo
+  (lambda (ls)
+    (let((x (parse-exp ls)))
+      (if (null? (unparse-exp x))
+          '()
+          ((> (car (unparse-exp ls)) max)(x (cdr (unparse-exp ls)) (car (unparse-exp ls))))
+          ))))
+
+(define (getlargest a_list)
+  (if (null? a_list) ; edge case: empty list
+      #f             ; return a special value signaling error   
+      (let x ((a_list (cdr a_list))   ; rest of the list
+                 (max (car a_list)))  ; assumed maximum
+        (cond ((null? a_list) max)    ; if the list is empty, return max
+              ((> (car a_list) max)   ; current element > max
+               (x (cdr a_list) (car a_list))) ; found new max
+              (else                      ; otherwise
+               (x (cdr a_list) max)))))) 
+
+;;(getlargest '(3 4 5))
+
+(define my-max
+  (lambda (l)
+    (let ((x (parse-exp l)))
+    (cond
+      [(null? (unparse-exp x)) max]
+      [(> (car (unparse-exp x)) max) (my-max (cdr (unparse-exp x)) (car (unparse-exp x)))]
+      [else (my-max (cdr (unparse-exp x)) max)])
+  (if (null? (unparse-exp x)) empty (my-max (unparse-exp x) (car (unparse-exp x)))))))
